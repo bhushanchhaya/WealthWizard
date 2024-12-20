@@ -73,6 +73,13 @@ body {
     border: 1px solid var(--input-border);
     background-color: var(--input-bg);
     color: var(--input-text);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+.form-control:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px var(--border-color);
 }
 
 .form-control:focus {

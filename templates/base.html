@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Calculator Platform</title>
+    <meta name="description" content="Professional financial calculator for compound interest, SWP, and investment planning with advanced visualization">
+    <meta name="keywords" content="financial calculator, compound interest, systematic withdrawal plan, investment calculator, retirement planning">
+    <meta name="author" content="Financial Calculator Platform">
+    <meta property="og:title" content="Professional Financial Calculator Platform">
+    <meta property="og:description" content="Advanced financial calculator with real-time visualizations for investment planning">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#1a2b4b">
+    
+    <title>Professional Financial Calculator | Investment Planning Tools</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,6 +19,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
@@ -38,7 +48,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/calculator.js') }}"></script>
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Professional Financial Calculator",
+        "description": "Advanced financial calculator with real-time visualizations for investment planning and systematic withdrawal plans",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
 </body>
 </html>
