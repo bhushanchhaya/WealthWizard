@@ -396,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (expectedReturn <= 0 || expectedReturn > 100 || isNaN(expectedReturn)) {
             return false;
         }
-        if (timePeriod <= 0 || timePeriod > 30 || isNaN(timePeriod)) {
+        if (timePeriod <= 0 || isNaN(timePeriod)) {
             return false;
         }
         if (inflationRate < 0 || inflationRate > 30 || isNaN(inflationRate)) {
