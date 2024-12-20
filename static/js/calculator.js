@@ -464,6 +464,30 @@ document.addEventListener('DOMContentLoaded', function() {
                             `${chartData.compoundBreakdown.withdrawals[index]}\n`;
             });
             downloadFile(csvContent, 'financial_projection.csv', 'text/csv');
+        } else if (format === 'pdf') {
+            // Export as PDF
+            fetch('/export-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(exportData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'financial_projection.pdf';
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error exporting PDF:', error);
+                alert('Failed to generate PDF. Please try again.');
+            });
         }
     };
 
