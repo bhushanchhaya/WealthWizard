@@ -84,20 +84,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const firstYearHtml = createPreviewItem(1, withdrawalAmount, inflationRate);
         previewContainer.innerHTML += firstYearHtml;
         
-        // Calculate the step size based on time period to ensure reasonable number of previews
-        const stepSize = timePeriod <= 25 ? 5 : Math.ceil(timePeriod / 10);
+        // Calculate preview years based on time period
+        let previewYears = [1]; // Always start with year 1
         
-        // Add previews at calculated intervals up to the time period
-        for (let years = stepSize; years <= timePeriod; years += stepSize) {
+        // For time periods up to 25 years, show every 5 years
+        // For longer periods, adjust the interval to show ~10 preview points
+        const interval = timePeriod <= 25 ? 5 : Math.max(5, Math.ceil(timePeriod / 10));
+        
+        // Generate preview years at calculated intervals
+        for (let year = interval; year < timePeriod; year += interval) {
+            previewYears.push(year);
+        }
+        
+        // Always include the final year if it's not already in the list
+        if (timePeriod > 1 && previewYears[previewYears.length - 1] !== timePeriod) {
+            previewYears.push(timePeriod);
+        }
+        
+        // Generate preview items for each year
+        previewYears.forEach(years => {
             const previewHtml = createPreviewItem(years, withdrawalAmount, inflationRate);
             previewContainer.innerHTML += previewHtml;
-        }
-        
-        // Add the final year if it's not already included
-        if (timePeriod % stepSize !== 0) {
-            const previewHtml = createPreviewItem(timePeriod, withdrawalAmount, inflationRate);
-            previewContainer.innerHTML += previewHtml;
-        }
+        });
     }
     
     function createPreviewItem(years, withdrawalAmount, inflationRate) {

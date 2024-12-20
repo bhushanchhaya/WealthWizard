@@ -188,9 +188,11 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 1rem;
     margin-top: 0.5rem;
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
-    padding-right: 5px;
+    padding-right: 10px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-navy) var(--light-gray);
 }
 
 .preview-item {
