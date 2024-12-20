@@ -59,12 +59,33 @@
                 
                 <div class="mb-3">
                     <label for="inflationRate" class="form-label">Annual Inflation Rate (%)</label>
-                    <div class="input-group">
+                    <div class="input-group mb-2">
                         <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
                         <input type="number" class="form-control" id="inflationRate" 
                                required min="0" max="30" step="0.1" placeholder="Enter inflation rate">
                         <div class="invalid-feedback">
                             Please enter a valid inflation rate (0-30%).
+                        </div>
+                    </div>
+                    <div class="range-wrapper">
+                        <input type="range" class="form-range" id="inflationSlider" 
+                               min="0" max="30" step="0.1" value="0">
+                        <div class="inflation-preview mt-2">
+                            <small class="text-muted">Preview of monthly withdrawal after:</small>
+                            <div class="preview-grid">
+                                <div class="preview-item">
+                                    <span class="year">1 Year</span>
+                                    <span class="amount" id="preview1">₹0</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span class="year">5 Years</span>
+                                    <span class="amount" id="preview5">₹0</span>
+                                </div>
+                                <div class="preview-item">
+                                    <span class="year">10 Years</span>
+                                    <span class="amount" id="preview10">₹0</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

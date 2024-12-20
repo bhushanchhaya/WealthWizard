@@ -10,8 +10,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add input event listeners for real-time calculation
     inputs.forEach(input => {
-        input.addEventListener('input', calculateSWP);
+        input.addEventListener('input', handleInputChange);
     });
+
+    // Sync inflation rate input and slider
+    const inflationRateInput = document.getElementById('inflationRate');
+    const inflationSlider = document.getElementById('inflationSlider');
+    
+    inflationSlider.addEventListener('input', (e) => {
+        inflationRateInput.value = e.target.value;
+        updateInflationPreview();
+        calculateSWP();
+    });
+
+    inflationRateInput.addEventListener('input', (e) => {
+        inflationSlider.value = e.target.value;
+        updateInflationPreview();
+    });
+
+    function handleInputChange(e) {
+        if (e.target.id === 'withdrawalAmount') {
+            updateInflationPreview();
+        }
+        calculateSWP();
+    }
+
+    function updateInflationPreview() {
+        const withdrawalAmount = parseFloat(document.getElementById('withdrawalAmount').value) || 0;
+        const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
+        
+        [1, 5, 10].forEach(years => {
+            const adjustment = 1 + (inflationRate/100) * years;
+            const futureAmount = withdrawalAmount * adjustment;
+            document.getElementById(`preview${years}`).textContent = formatCurrency(futureAmount);
+        });
+    }
 
     // Format currency function
     function formatCurrency(amount) {
