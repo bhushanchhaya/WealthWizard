@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Chart objects
     let balanceChart = null;
     let withdrawalChart = null;
+    let compoundChart = null; // Added compound chart object
 
     // Add input event listeners for real-time calculation
     inputs.forEach(input => {
@@ -131,6 +132,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+
+            // Compound Interest Chart
+            const compoundCtx = document.getElementById('compoundChart').getContext('2d');
+            compoundChart = new Chart(compoundCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Initial Investment',
+                        data: [],
+                        backgroundColor: 'rgba(26, 43, 75, 0.7)',
+                        borderColor: '#1a2b4b',
+                        borderWidth: 1
+                    }, {
+                        label: 'Returns',
+                        data: [],
+                        backgroundColor: 'rgba(58, 112, 65, 0.7)',
+                        borderColor: '#2c5530',
+                        borderWidth: 1
+                    }, {
+                        label: 'Withdrawals',
+                        data: [],
+                        backgroundColor: 'rgba(192, 75, 75, 0.7)',
+                        borderColor: '#c04b4b',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            stacked: true
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => formatCurrency(value)
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Compound Interest Breakdown'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + 
+                                           formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
     }
 
     // Initialize charts on page load
@@ -201,6 +259,25 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('finalBalance').textContent = formatCurrency(balance);
         document.getElementById('totalWithdrawals').textContent = formatCurrency(totalWithdrawals);
         
+        // Calculate compound interest breakdown
+        const compoundData = labels.map((_, index) => {
+            if (index === 0) {
+                return {
+                    initial: initialInvestment,
+                    returns: 0,
+                    withdrawals: 0
+                };
+            }
+            const totalValue = balances[index];
+            const totalWithdrawn = withdrawals[index];
+            const returns = Math.max(0, totalValue + totalWithdrawn - initialInvestment);
+            return {
+                initial: initialInvestment,
+                returns: returns,
+                withdrawals: -totalWithdrawn
+            };
+        });
+
         // Update charts
         balanceChart.data.labels = labels;
         balanceChart.data.datasets[0].data = balances;
@@ -209,6 +286,12 @@ document.addEventListener('DOMContentLoaded', function() {
         withdrawalChart.data.labels = labels;
         withdrawalChart.data.datasets[0].data = withdrawals;
         withdrawalChart.update();
+
+        compoundChart.data.labels = labels;
+        compoundChart.data.datasets[0].data = compoundData.map(d => d.initial);
+        compoundChart.data.datasets[1].data = compoundData.map(d => d.returns);
+        compoundChart.data.datasets[2].data = compoundData.map(d => d.withdrawals);
+        compoundChart.update();
         
         // Show results section
         resultsSection.classList.remove('d-none');
