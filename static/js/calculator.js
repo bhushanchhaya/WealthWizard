@@ -1,4 +1,26 @@
 document.addEventListener('DOMContentLoaded', function() {
+// Theme management
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.querySelector('.theme-toggle');
+    
+    // Check for saved theme preference or default to 'light'
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Update charts with new theme colors
+        if (balanceChart) balanceChart.update();
+        if (withdrawalChart) withdrawalChart.update();
+        if (compoundChart) compoundChart.update();
+    });
+});
+
     // Get form elements
     const form = document.getElementById('swpForm');
     const inputs = form.querySelectorAll('input');

@@ -1,16 +1,31 @@
 :root {
+    /* Light theme (default) */
     --primary-navy: #1a2b4b;
-    --secondary-navy: #2c4875;
-    --primary-green: #2c5530;
-    --secondary-green: #3a7041;
-    --light-bg: #f8f9fa;
-    --text-dark: #333333;
+    --light-gray: #f8f9fa;
+    --text-gray: #6c757d;
+    --bg-color: #ffffff;
+    --text-color: #1a2b4b;
+    --card-bg: #ffffff;
+    --border-color: rgba(0,0,0,0.05);
+    --chart-grid: rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] {
+    --primary-navy: #3b4d6b;
+    --light-gray: #2a2a2a;
+    --text-gray: #a0a0a0;
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --card-bg: #2d2d2d;
+    --border-color: rgba(255,255,255,0.1);
+    --chart-grid: rgba(255,255,255,0.1);
 }
 
 body {
-    background-color: var(--light-bg);
-    color: var(--text-dark);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .navbar {
@@ -23,10 +38,10 @@ body {
 }
 
 .calculator-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 10px;
     padding: 2rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px var(--border-color);
     margin-bottom: 2rem;
 }
 
@@ -36,7 +51,7 @@ body {
 }
 
 .form-label {
-    color: var(--text-dark);
+    color: var(--text-color);
     font-weight: 500;
 }
 
@@ -56,7 +71,7 @@ body {
 }
 
 .results-section {
-    background-color: #f8f9fa;
+    background-color: var(--light-gray);
     border-radius: 8px;
     padding: 1.5rem;
     margin-top: 2rem;
@@ -68,10 +83,10 @@ body {
 }
 
 .result-card {
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px var(--border-color);
 }
 
 .result-item {
@@ -81,7 +96,7 @@ body {
 
 .result-item label {
     display: block;
-    color: var(--text-dark);
+    color: var(--text-color);
     font-weight: 500;
     margin-bottom: 0.5rem;
 }
@@ -97,7 +112,7 @@ body {
     .calculator-card {
         padding: 1.5rem;
     }
-    
+
     .result-item {
         margin-bottom: 1.5rem;
     }
@@ -105,11 +120,11 @@ body {
 .chart-container {
     position: relative;
     height: 300px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px var(--border-color);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -155,9 +170,9 @@ body {
 .preview-item {
     text-align: center;
     padding: 0.5rem;
-    background: white;
+    background: var(--card-bg);
     border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px var(--border-color);
 }
 
 .preview-item .year {
@@ -179,9 +194,9 @@ body {
     justify-content: center;
     gap: 2rem;
     padding: 1rem;
-    background: white;
+    background: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px var(--border-color);
 }
 
 .legend-item {
@@ -200,4 +215,28 @@ body {
     background-color: var(--primary-navy);
     color: white;
     padding: 1rem 0;
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+[data-theme="dark"] .theme-toggle .fa-moon {
+    display: none;
+}
+
+[data-theme="dark"] .theme-toggle::before {
+    font-family: "Font Awesome 6 Free";
+    content: "\f185";
+    font-weight: 900;
 }
