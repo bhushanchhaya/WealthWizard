@@ -165,6 +165,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: {
                         display: true,
                         text: 'Investment Balance Over Time'
+                    },
+                    zoom: {
+                        pan: {
+                            enabled: true,
+                            mode: 'xy',
+                            modifierKey: 'ctrl'
+                        },
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                                modifierKey: 'ctrl'
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'xy'
+                        }
                     }
                 }
             }
@@ -210,6 +227,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     title: {
                         display: true,
                         text: 'Cumulative Withdrawals Over Time'
+                    },
+                    zoom: {
+                        pan: {
+                            enabled: true,
+                            mode: 'xy',
+                            modifierKey: 'ctrl'
+                        },
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                                modifierKey: 'ctrl'
+                            },
+                            pinch: {
+                                enabled: true
+                            },
+                            mode: 'xy'
+                        }
                     }
                 }
             }
@@ -307,6 +341,23 @@ document.addEventListener('DOMContentLoaded', function() {
                                            formatCurrency(context.raw);
                                 }
                             }
+                        },
+                        zoom: {
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                                modifierKey: 'ctrl'
+                            },
+                            zoom: {
+                                wheel: {
+                                    enabled: true,
+                                    modifierKey: 'ctrl'
+                                },
+                                pinch: {
+                                    enabled: true
+                                },
+                                mode: 'xy'
+                            }
                         }
                     }
                 }
@@ -315,6 +366,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize charts on page load
     initializeCharts();
+
+    // Reset zoom button handlers
+    document.querySelectorAll('.reset-zoom').forEach(button => {
+        button.addEventListener('click', () => {
+            const chartId = button.getAttribute('data-chart');
+            const chart = window[chartId.charAt(0).toLowerCase() + chartId.slice(1)];
+            if (chart) {
+                chart.resetZoom();
+            }
+        });
+    });
 
     // Calculate SWP function
     function calculateSWP() {
