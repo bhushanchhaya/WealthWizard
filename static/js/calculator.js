@@ -68,9 +68,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     label: 'Balance Progression',
                     data: [],
                     borderColor: '#1a2b4b',
-                    backgroundColor: 'rgba(26, 43, 75, 0.1)',
+                    backgroundColor: (context) => {
+                        const chart = context.chart;
+                        const {ctx, chartArea} = chart;
+                        if (!chartArea) return null;
+                        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                        gradient.addColorStop(0, 'rgba(26, 43, 75, 0.0)');
+                        gradient.addColorStop(1, 'rgba(26, 43, 75, 0.2)');
+                        return gradient;
+                    },
                     fill: true,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
@@ -105,7 +115,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: 'Cumulative Withdrawals',
                     data: [],
-                    backgroundColor: 'rgba(58, 112, 65, 0.7)',
+                    backgroundColor: (context) => {
+                        const chart = context.chart;
+                        const {ctx, chartArea} = chart;
+                        if (!chartArea) return null;
+                        const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                        gradient.addColorStop(0, 'rgba(58, 112, 65, 0.6)');
+                        gradient.addColorStop(1, 'rgba(58, 112, 65, 0.9)');
+                        return gradient;
+                    },
                     borderColor: '#2c5530',
                     borderWidth: 1
                 }]
@@ -142,36 +160,76 @@ document.addEventListener('DOMContentLoaded', function() {
                     datasets: [{
                         label: 'Initial Investment',
                         data: [],
-                        backgroundColor: 'rgba(26, 43, 75, 0.7)',
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const {ctx, chartArea} = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(26, 43, 75, 0.6)');
+                            gradient.addColorStop(1, 'rgba(26, 43, 75, 0.9)');
+                            return gradient;
+                        },
                         borderColor: '#1a2b4b',
                         borderWidth: 1
                     }, {
                         label: 'Returns',
                         data: [],
-                        backgroundColor: 'rgba(58, 112, 65, 0.7)',
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const {ctx, chartArea} = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(58, 112, 65, 0.6)');
+                            gradient.addColorStop(1, 'rgba(58, 112, 65, 0.9)');
+                            return gradient;
+                        },
                         borderColor: '#2c5530',
                         borderWidth: 1
                     }, {
                         label: 'Withdrawals',
                         data: [],
-                        backgroundColor: 'rgba(192, 75, 75, 0.7)',
+                        backgroundColor: (context) => {
+                            const chart = context.chart;
+                            const {ctx, chartArea} = chart;
+                            if (!chartArea) return null;
+                            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                            gradient.addColorStop(0, 'rgba(192, 75, 75, 0.6)');
+                            gradient.addColorStop(1, 'rgba(192, 75, 75, 0.9)');
+                            return gradient;
+                        },
                         borderColor: '#c04b4b',
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 750,
+                        easing: 'easeInOutQuart',
+                        delay: (context) => context.dataIndex * 100
+                    },
                     scales: {
                         x: {
-                            stacked: true
+                            stacked: true,
+                            grid: {
+                                display: false
+                            }
                         },
                         y: {
                             stacked: true,
                             beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
                             ticks: {
                                 callback: value => formatCurrency(value)
                             }
                         }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
                     },
                     plugins: {
                         title: {
