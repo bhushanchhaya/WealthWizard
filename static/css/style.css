@@ -8,6 +8,10 @@
     --card-bg: #ffffff;
     --border-color: rgba(0,0,0,0.05);
     --chart-grid: rgba(0,0,0,0.05);
+    --input-bg: #ffffff;
+    --input-text: #1a2b4b;
+    --input-border: #ced4da;
+    --input-group-bg: #2c4875;
 }
 
 [data-theme="dark"] {
@@ -19,6 +23,10 @@
     --card-bg: #2d2d2d;
     --border-color: rgba(255,255,255,0.1);
     --chart-grid: rgba(255,255,255,0.1);
+    --input-bg: #2d2d2d;
+    --input-text: #ffffff;
+    --input-border: #3b4d6b;
+    --input-group-bg: #3b4d6b;
 }
 
 body {
@@ -62,12 +70,20 @@ body {
 }
 
 .form-control {
-    border: 1px solid #ced4da;
+    border: 1px solid var(--input-border);
+    background-color: var(--input-bg);
+    color: var(--input-text);
 }
 
 .form-control:focus {
-    border-color: var(--secondary-navy);
+    border-color: var(--primary-navy);
     box-shadow: 0 0 0 0.2rem rgba(26, 43, 75, 0.25);
+    background-color: var(--input-bg);
+    color: var(--input-text);
+}
+
+.form-control::placeholder {
+    color: var(--text-gray);
 }
 
 .results-section {
