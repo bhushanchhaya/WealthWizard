@@ -4,20 +4,12 @@
 <div class="row">
     <div class="col-md-6 offset-md-3">
         <div class="calculator-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="calculator-selector mb-4">
-                <select class="form-select" id="calculatorType">
-                    <option value="swp">SWP (Systematic Withdrawal Plan)</option>
-                    <option value="emi">EMI (Equated Monthly Installment)</option>
-                    <option value="sip">SIP (Systematic Investment Plan)</option>
-                </select>
-            </div>
             <h2 class="text-center mb-4">
-                <i class="fas fa-coins"></i> <span id="calculatorTitle">SWP Calculator</span>
+                <i class="fas fa-coins"></i> SWP Calculator
             </h2>
             
             <form id="swpForm" class="needs-validation" novalidate>
-                <!-- SWP and SIP Fields -->
-                <div class="mb-3 calculator-field swp-field sip-field">
+                <div class="mb-3">
                     <label for="initialInvestment" class="form-label">Initial Investment Amount (₹)</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
@@ -29,41 +21,14 @@
                     </div>
                 </div>
 
-                <!-- SWP Fields -->
-                <div class="mb-3 calculator-field swp-field">
-                    <label for="withdrawalAmount" class="form-label">Monthly Withdrawal Amount (₹)</label>
+                <div class="mb-3">
+                    <label for="withdrawalAmount" class="form-label">Montly Withdrawal Amount (₹)</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
                         <input type="number" class="form-control" id="withdrawalAmount" 
                                required min="1" step="1" placeholder="Enter monthly withdrawal">
                         <div class="invalid-feedback">
                             Please enter a valid withdrawal amount.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- EMI Fields -->
-                <div class="mb-3 calculator-field emi-field d-none">
-                    <label for="loanAmount" class="form-label">Loan Amount (₹)</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
-                        <input type="number" class="form-control" id="loanAmount" 
-                               required min="1" step="1" placeholder="Enter loan amount">
-                        <div class="invalid-feedback">
-                            Please enter a valid loan amount.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SIP Fields -->
-                <div class="mb-3 calculator-field sip-field d-none">
-                    <label for="monthlyInvestment" class="form-label">Monthly Investment (₹)</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
-                        <input type="number" class="form-control" id="monthlyInvestment" 
-                               required min="1" step="1" placeholder="Enter monthly investment">
-                        <div class="invalid-feedback">
-                            Please enter a valid monthly investment amount.
                         </div>
                     </div>
                 </div>
@@ -170,11 +135,8 @@
                             <button class="btn btn-primary me-2" onclick="exportData('json')">
                                 <i class="fas fa-file-code"></i> Export JSON
                             </button>
-                            <button class="btn btn-success me-2" onclick="exportData('csv')">
+                            <button class="btn btn-success" onclick="exportData('csv')">
                                 <i class="fas fa-file-csv"></i> Export CSV
-                            </button>
-                            <button class="btn btn-danger" onclick="exportData('pdf')">
-                                <i class="fas fa-file-pdf"></i> Export PDF
                             </button>
                         </div>
                     </div>
