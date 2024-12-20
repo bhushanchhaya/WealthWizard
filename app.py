@@ -48,6 +48,11 @@ def index():
     logger.info("Rendering index page")
     return render_template('index.html')
 
+@app.route('/emi-calculator')
+def emi_calculator():
+    logger.info("Rendering EMI calculator page")
+    return render_template('emi_calculator.html')
+
 # Error handlers
 @app.errorhandler(404)
 def not_found_error(error):
