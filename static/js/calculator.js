@@ -41,7 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add input event listeners for real-time calculation
     inputs.forEach(input => {
-        input.addEventListener('input', handleInputChange);
+        input.addEventListener('input', (e) => {
+            if (e.target.id === 'timePeriod') {
+                updateInflationPreview();
+            }
+            handleInputChange(e);
+        });
     });
 
     // Sync inflation rate input and slider
@@ -69,12 +74,38 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateInflationPreview() {
         const withdrawalAmount = parseFloat(document.getElementById('withdrawalAmount').value) || 0;
         const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
+        const timePeriod = parseFloat(document.getElementById('timePeriod').value) || 30;
+        const previewContainer = document.getElementById('preview-container');
         
-        [1, 5, 10].forEach(years => {
-            const adjustment = Math.pow(1 + (inflationRate/100), years);
-            const futureAmount = withdrawalAmount * adjustment;
-            document.getElementById(`preview${years}`).textContent = formatCurrency(futureAmount);
-        });
+        // Clear existing previews
+        previewContainer.innerHTML = '';
+        
+        // Always show year 1
+        const firstYearHtml = createPreviewItem(1, withdrawalAmount, inflationRate);
+        previewContainer.innerHTML += firstYearHtml;
+        
+        // Add previews every 5 years up to the time period
+        for (let years = 5; years <= timePeriod; years += 5) {
+            const previewHtml = createPreviewItem(years, withdrawalAmount, inflationRate);
+            previewContainer.innerHTML += previewHtml;
+        }
+        
+        // Add the final year if it's not already included and greater than 5
+        if (timePeriod > 5 && timePeriod % 5 !== 0) {
+            const previewHtml = createPreviewItem(timePeriod, withdrawalAmount, inflationRate);
+            previewContainer.innerHTML += previewHtml;
+        }
+    }
+    
+    function createPreviewItem(years, withdrawalAmount, inflationRate) {
+        const adjustment = Math.pow(1 + (inflationRate/100), years);
+        const futureAmount = withdrawalAmount * adjustment;
+        return `
+            <div class="preview-item">
+                <span class="year">${years} Year${years > 1 ? 's' : ''}</span>
+                <span class="amount" id="preview${years}">${formatCurrency(futureAmount)}</span>
+            </div>
+        `;
     }
 
     // Format currency function
