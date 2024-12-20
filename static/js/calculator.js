@@ -107,22 +107,25 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateSWP() {
         // Get input values
         const initialInvestment = parseFloat(document.getElementById('initialInvestment').value) || 0;
-        const monthlyWithdrawal = parseFloat(document.getElementById('withdrawalAmount').value) || 0;
+        const initialMonthlyWithdrawal = parseFloat(document.getElementById('withdrawalAmount').value) || 0;
         const expectedReturn = parseFloat(document.getElementById('expectedReturn').value) || 0;
         const timePeriod = parseFloat(document.getElementById('timePeriod').value) || 0;
+        const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
 
         // Validate inputs
-        if (!validateInputs(initialInvestment, monthlyWithdrawal, expectedReturn, timePeriod)) {
+        if (!validateInputs(initialInvestment, initialMonthlyWithdrawal, expectedReturn, timePeriod, inflationRate)) {
             resultsSection.classList.add('d-none');
             return;
         }
 
-        // Calculate monthly return rate
-        const monthlyRate = expectedReturn / (12 * 100);
+        // Calculate monthly rates
+        const monthlyReturnRate = expectedReturn / (12 * 100);
+        const monthlyInflationRate = inflationRate / (12 * 100);
         
         // Calculate progression data
         let balance = initialInvestment;
         let totalWithdrawals = 0;
+        let currentMonthlyWithdrawal = initialMonthlyWithdrawal;
         const totalMonths = timePeriod * 12;
         
         const balances = [initialInvestment];
@@ -130,13 +133,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const labels = ['Start'];
 
         for (let i = 1; i <= totalMonths; i++) {
+            // Adjust withdrawal amount for inflation at the start of each year
+            if (i % 12 === 1 && i > 1) {
+                currentMonthlyWithdrawal *= (1 + inflationRate / 100);
+            }
+
             // Add monthly returns
-            balance += balance * monthlyRate;
+            balance += balance * monthlyReturnRate;
             
             // Subtract monthly withdrawal
-            if (balance >= monthlyWithdrawal) {
-                balance -= monthlyWithdrawal;
-                totalWithdrawals += monthlyWithdrawal;
+            if (balance >= currentMonthlyWithdrawal) {
+                balance -= currentMonthlyWithdrawal;
+                totalWithdrawals += currentMonthlyWithdrawal;
             } else {
                 totalWithdrawals += balance;
                 balance = 0;
@@ -167,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Validate inputs function
-    function validateInputs(initialInvestment, monthlyWithdrawal, expectedReturn, timePeriod) {
+    function validateInputs(initialInvestment, monthlyWithdrawal, expectedReturn, timePeriod, inflationRate) {
         if (initialInvestment <= 0 || isNaN(initialInvestment)) {
             return false;
         }
@@ -178,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         if (timePeriod <= 0 || timePeriod > 30 || isNaN(timePeriod)) {
+            return false;
+        }
+        if (inflationRate < 0 || inflationRate > 30 || isNaN(inflationRate)) {
             return false;
         }
         return true;
