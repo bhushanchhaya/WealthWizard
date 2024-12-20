@@ -131,18 +131,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const withdrawals = [0];
         const labels = ['Start'];
 
-        // Pre-calculate yearly withdrawal amounts
-        const yearlyWithdrawals = Array(Math.ceil(totalMonths/12));
-        yearlyWithdrawals[0] = initialMonthlyWithdrawal;
-        for (let year = 1; year < yearlyWithdrawals.length; year++) {
-            yearlyWithdrawals[year] = yearlyWithdrawals[year-1] * (1 + inflationRate/100);
+        // Pre-calculate yearly withdrawal amounts based on annual inflation
+        const yearlyWithdrawals = [];
+        for (let year = 0; year <= timePeriod; year++) {
+            // For each year, calculate the inflation-adjusted monthly withdrawal
+            // Using simple annual inflation adjustment (not compounding monthly)
+            const yearlyAdjustment = (1 + (inflationRate/100) * year);
+            yearlyWithdrawals[year] = initialMonthlyWithdrawal * yearlyAdjustment;
         }
 
         for (let i = 1; i <= totalMonths; i++) {
             // Update withdrawal amount at the start of each year
-            if (i % 12 === 1) {
-                currentMonthlyWithdrawal = yearlyWithdrawals[Math.floor(i/12)];
-            }
+            // We use Math.floor(i/12) to get the current year number
+            currentMonthlyWithdrawal = yearlyWithdrawals[Math.floor((i-1)/12)];
 
             // Add monthly returns
             balance += balance * monthlyReturnRate;
