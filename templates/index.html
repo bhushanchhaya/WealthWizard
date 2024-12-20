@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="calculator-card">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-coins"></i> SWP Calculator
+            </h2>
+            
+            <form id="swpForm" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="initialInvestment" class="form-label">Initial Investment Amount (₹)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+                        <input type="number" class="form-control" id="initialInvestment" 
+                               required min="1" step="1" placeholder="Enter initial investment">
+                        <div class="invalid-feedback">
+                            Please enter a valid investment amount.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="withdrawalAmount" class="form-label">Monthly Withdrawal Amount (₹)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-rupee-sign"></i></span>
+                        <input type="number" class="form-control" id="withdrawalAmount" 
+                               required min="1" step="1" placeholder="Enter monthly withdrawal">
+                        <div class="invalid-feedback">
+                            Please enter a valid withdrawal amount.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="expectedReturn" class="form-label">Expected Annual Return (%)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-percentage"></i></span>
+                        <input type="number" class="form-control" id="expectedReturn" 
+                               required min="1" max="100" step="0.1" placeholder="Enter expected return">
+                        <div class="invalid-feedback">
+                            Please enter a valid return rate (1-100).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="timePeriod" class="form-label">Time Period (Years)</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-clock"></i></span>
+                        <input type="number" class="form-control" id="timePeriod" 
+                               required min="1" max="30" step="1" placeholder="Enter time period">
+                        <div class="invalid-feedback">
+                            Please enter a valid time period (1-30 years).
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div id="results" class="results-section mt-4 d-none">
+                <h3 class="text-center mb-3">Results</h3>
+                <div class="result-card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="result-item">
+                                <label>Final Balance</label>
+                                <span id="finalBalance">₹0</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="result-item">
+                                <label>Total Withdrawals</label>
+                                <span id="totalWithdrawals">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
