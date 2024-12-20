@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateInflationPreview() {
         const withdrawalAmount = parseFloat(document.getElementById('withdrawalAmount').value) || 0;
         const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
-        const timePeriod = parseFloat(document.getElementById('timePeriod').value) || 30;
+        const timePeriod = parseInt(document.getElementById('timePeriod').value) || 30;
         const previewContainer = document.getElementById('preview-container');
         
         // Clear existing previews
@@ -84,14 +84,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const firstYearHtml = createPreviewItem(1, withdrawalAmount, inflationRate);
         previewContainer.innerHTML += firstYearHtml;
         
-        // Add previews every 5 years up to the time period
-        for (let years = 5; years <= timePeriod; years += 5) {
+        // Calculate the step size based on time period to ensure reasonable number of previews
+        const stepSize = timePeriod <= 25 ? 5 : Math.ceil(timePeriod / 10);
+        
+        // Add previews at calculated intervals up to the time period
+        for (let years = stepSize; years <= timePeriod; years += stepSize) {
             const previewHtml = createPreviewItem(years, withdrawalAmount, inflationRate);
             previewContainer.innerHTML += previewHtml;
         }
         
-        // Add the final year if it's not already included and greater than 5
-        if (timePeriod > 5 && timePeriod % 5 !== 0) {
+        // Add the final year if it's not already included
+        if (timePeriod % stepSize !== 0) {
             const previewHtml = createPreviewItem(timePeriod, withdrawalAmount, inflationRate);
             previewContainer.innerHTML += previewHtml;
         }
