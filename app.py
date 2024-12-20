@@ -3,7 +3,15 @@ from flask import Flask, render_template
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+logger.info('Starting Financial Calculator application')
 
 # Create Flask app
 app = Flask(__name__)
