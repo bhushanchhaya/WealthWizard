@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
         
         [1, 5, 10].forEach(years => {
-            const adjustment = 1 + (inflationRate/100) * years;
+            const adjustment = Math.pow(1 + (inflationRate/100), years);
             const futureAmount = withdrawalAmount * adjustment;
             document.getElementById(`preview${years}`).textContent = formatCurrency(futureAmount);
         });
@@ -168,8 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const yearlyWithdrawals = [];
         for (let year = 0; year <= timePeriod; year++) {
             // For each year, calculate the inflation-adjusted monthly withdrawal
-            // Using simple annual inflation adjustment (not compounding monthly)
-            const yearlyAdjustment = (1 + (inflationRate/100) * year);
+            // Using compound annual inflation adjustment
+            const yearlyAdjustment = Math.pow(1 + (inflationRate/100), year);
             yearlyWithdrawals[year] = initialMonthlyWithdrawal * yearlyAdjustment;
         }
 
