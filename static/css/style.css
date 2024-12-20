@@ -102,6 +102,19 @@ body {
         margin-bottom: 1.5rem;
     }
 }
+.chart-container {
+    position: relative;
+    height: 300px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
 
 .footer {
     background-color: var(--primary-navy);

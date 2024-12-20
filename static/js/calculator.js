@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('swpForm');
     const inputs = form.querySelectorAll('input');
     const resultsSection = document.getElementById('results');
+    
+    // Chart objects
+    let balanceChart = null;
+    let withdrawalChart = null;
 
     // Add input event listeners for real-time calculation
     inputs.forEach(input => {
@@ -17,6 +21,87 @@ document.addEventListener('DOMContentLoaded', function() {
             maximumFractionDigits: 0
         }).format(amount);
     }
+
+    // Initialize charts
+    function initializeCharts() {
+        // Balance progression chart
+        const balanceCtx = document.getElementById('balanceChart').getContext('2d');
+        balanceChart = new Chart(balanceCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Balance Progression',
+                    data: [],
+                    borderColor: '#1a2b4b',
+                    backgroundColor: 'rgba(26, 43, 75, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: value => formatCurrency(value)
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Investment Balance Over Time'
+                    }
+                }
+            }
+        });
+
+        // Withdrawal progression chart
+        const withdrawalCtx = document.getElementById('withdrawalChart').getContext('2d');
+        withdrawalChart = new Chart(withdrawalCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Cumulative Withdrawals',
+                    data: [],
+                    backgroundColor: 'rgba(58, 112, 65, 0.7)',
+                    borderColor: '#2c5530',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1000,
+                    easing: 'easeInOutQuart'
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: value => formatCurrency(value)
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Cumulative Withdrawals Over Time'
+                    }
+                }
+            }
+        });
+    }
+
+    // Initialize charts on page load
+    initializeCharts();
 
     // Calculate SWP function
     function calculateSWP() {
@@ -35,12 +120,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate monthly return rate
         const monthlyRate = expectedReturn / (12 * 100);
         
-        // Calculate final balance and total withdrawals
+        // Calculate progression data
         let balance = initialInvestment;
         let totalWithdrawals = 0;
         const totalMonths = timePeriod * 12;
+        
+        const balances = [initialInvestment];
+        const withdrawals = [0];
+        const labels = ['Start'];
 
-        for (let i = 0; i < totalMonths; i++) {
+        for (let i = 1; i <= totalMonths; i++) {
             // Add monthly returns
             balance += balance * monthlyRate;
             
@@ -51,13 +140,27 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 totalWithdrawals += balance;
                 balance = 0;
-                break;
+            }
+
+            if (i % 12 === 0) {
+                balances.push(balance);
+                withdrawals.push(totalWithdrawals);
+                labels.push(`Year ${i/12}`);
             }
         }
 
         // Update results
         document.getElementById('finalBalance').textContent = formatCurrency(balance);
         document.getElementById('totalWithdrawals').textContent = formatCurrency(totalWithdrawals);
+        
+        // Update charts
+        balanceChart.data.labels = labels;
+        balanceChart.data.datasets[0].data = balances;
+        balanceChart.update();
+
+        withdrawalChart.data.labels = labels;
+        withdrawalChart.data.datasets[0].data = withdrawals;
+        withdrawalChart.update();
         
         // Show results section
         resultsSection.classList.remove('d-none');
