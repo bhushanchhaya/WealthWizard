@@ -263,3 +263,27 @@ body {
     content: "\f185";
     font-weight: 900;
 }
+
+.export-buttons {
+    background: var(--card-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--border-color);
+}
+
+.export-buttons .btn {
+    padding: 0.5rem 1.25rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.export-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--border-color);
+}
+
+.export-buttons .btn i {
+    font-size: 1.1rem;
+}

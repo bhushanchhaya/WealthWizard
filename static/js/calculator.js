@@ -413,4 +413,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         form.classList.add('was-validated');
     });
+
+    // Export data function
+    window.exportData = function(format) {
+        // Get the current form values
+        const formData = {
+            initialInvestment: document.getElementById('initialInvestment').value,
+            withdrawalAmount: document.getElementById('withdrawalAmount').value,
+            expectedReturn: document.getElementById('expectedReturn').value,
+            timePeriod: document.getElementById('timePeriod').value,
+            inflationRate: document.getElementById('inflationRate').value
+        };
+
+        // Get the results
+        const results = {
+            finalBalance: document.getElementById('finalBalance').textContent,
+            totalWithdrawals: document.getElementById('totalWithdrawals').textContent
+        };
+
+        // Get chart data
+        const chartData = {
+            labels: balanceChart.data.labels,
+            balances: balanceChart.data.datasets[0].data,
+            withdrawals: withdrawalChart.data.datasets[0].data,
+            compoundBreakdown: {
+                initialInvestment: compoundChart.data.datasets[0].data,
+                returns: compoundChart.data.datasets[1].data,
+                withdrawals: compoundChart.data.datasets[2].data
+            }
+        };
+
+        const exportData = {
+            timestamp: new Date().toISOString(),
+            inputs: formData,
+            results: results,
+            projections: chartData
+        };
+
+        if (format === 'json') {
+            // Export as JSON
+            const jsonString = JSON.stringify(exportData, null, 2);
+            downloadFile(jsonString, 'financial_projection.json', 'application/json');
+        } else if (format === 'csv') {
+            // Create CSV content
+            let csvContent = 'Year,Balance,Cumulative Withdrawals,Initial Investment,Returns,Withdrawals\n';
+            chartData.labels.forEach((label, index) => {
+                csvContent += `${label},${chartData.balances[index]},${chartData.withdrawals[index]},` +
+                            `${chartData.compoundBreakdown.initialInvestment[index]},` +
+                            `${chartData.compoundBreakdown.returns[index]},` +
+                            `${chartData.compoundBreakdown.withdrawals[index]}\n`;
+            });
+            downloadFile(csvContent, 'financial_projection.csv', 'text/csv');
+        }
+    };
+
+    // Helper function to download files
+    function downloadFile(content, fileName, contentType) {
+        const blob = new Blob([content], { type: contentType });
+        const url = window.URL.createObjectURL(blob);
+        const downloadLink = document.createElement('a');
+        downloadLink.href = url;
+        downloadLink.download = fileName;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        window.URL.revokeObjectURL(url);
+    }
 });
