@@ -118,9 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Calculate monthly rates
+        // Calculate monthly return rate
         const monthlyReturnRate = expectedReturn / (12 * 100);
-        const monthlyInflationRate = inflationRate / (12 * 100);
         
         // Calculate progression data
         let balance = initialInvestment;
@@ -132,10 +131,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const withdrawals = [0];
         const labels = ['Start'];
 
+        // Pre-calculate yearly withdrawal amounts
+        const yearlyWithdrawals = Array(Math.ceil(totalMonths/12));
+        yearlyWithdrawals[0] = initialMonthlyWithdrawal;
+        for (let year = 1; year < yearlyWithdrawals.length; year++) {
+            yearlyWithdrawals[year] = yearlyWithdrawals[year-1] * (1 + inflationRate/100);
+        }
+
         for (let i = 1; i <= totalMonths; i++) {
-            // Adjust withdrawal amount for inflation at the start of each year
-            if (i % 12 === 1 && i > 1) {
-                currentMonthlyWithdrawal *= (1 + inflationRate / 100);
+            // Update withdrawal amount at the start of each year
+            if (i % 12 === 1) {
+                currentMonthlyWithdrawal = yearlyWithdrawals[Math.floor(i/12)];
             }
 
             // Add monthly returns
