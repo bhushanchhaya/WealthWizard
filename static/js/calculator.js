@@ -30,6 +30,180 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Get form elements
+    // Calculator type management
+    const calculatorType = document.getElementById('calculatorType');
+    const calculatorTitle = document.getElementById('calculatorTitle');
+    const calculatorFields = document.querySelectorAll('.calculator-field');
+    
+    calculatorType.addEventListener('change', function() {
+        // Update calculator title
+        calculatorTitle.textContent = this.options[this.selectedIndex].text.split(' (')[0] + ' Calculator';
+        
+        // Hide all calculator fields
+        calculatorFields.forEach(field => {
+            field.classList.add('d-none');
+        });
+        
+        // Show fields for selected calculator
+        const selectedType = this.value;
+        document.querySelectorAll(`.${selectedType}-field`).forEach(field => {
+            field.classList.remove('d-none');
+        });
+        
+        // Reset and recalculate
+        resetCalculator();
+        calculateResults();
+    });
+    
+    function resetCalculator() {
+        // Reset all input fields
+        form.reset();
+        // Hide results section
+        resultsSection.classList.add('d-none');
+        // Reset charts
+        if (balanceChart) balanceChart.clear();
+        if (withdrawalChart) withdrawalChart.clear();
+        if (compoundChart) compoundChart.clear();
+    }
+    
+    function calculateResults() {
+        const type = calculatorType.value;
+        switch(type) {
+            case 'swp':
+                calculateSWP();
+                break;
+            case 'emi':
+                calculateEMI();
+                break;
+            case 'sip':
+                calculateSIP();
+                break;
+        }
+    }
+    
+    // EMI Calculator
+    function calculateEMI() {
+        const loanAmount = parseFloat(document.getElementById('loanAmount').value) || 0;
+        const interestRate = parseFloat(document.getElementById('expectedReturn').value) || 0;
+        const timePeriod = parseFloat(document.getElementById('timePeriod').value) || 0;
+        
+        if (!validateInputs(loanAmount, interestRate, timePeriod)) {
+            resultsSection.classList.add('d-none');
+            return;
+        }
+        
+        const monthlyRate = interestRate / (12 * 100);
+        const totalMonths = timePeriod * 12;
+        const emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths) / 
+                   (Math.pow(1 + monthlyRate, totalMonths) - 1);
+        
+        const labels = ['Start'];
+        const principalData = [loanAmount];
+        const emiData = [0];
+        const interestData = [0];
+        
+        let remainingLoan = loanAmount;
+        let totalInterest = 0;
+        let totalPaid = 0;
+        
+        for (let year = 1; year <= timePeriod; year++) {
+            for (let month = 1; month <= 12; month++) {
+                const interest = remainingLoan * monthlyRate;
+                const principal = emi - interest;
+                remainingLoan -= principal;
+                totalInterest += interest;
+                totalPaid += emi;
+            }
+            
+            labels.push(`Year ${year}`);
+            principalData.push(Math.max(0, remainingLoan));
+            emiData.push(totalPaid);
+            interestData.push(totalInterest);
+        }
+        
+        // Update results
+        document.getElementById('finalBalance').textContent = formatCurrency(remainingLoan);
+        document.getElementById('totalWithdrawals').textContent = formatCurrency(totalPaid);
+        
+        // Update charts
+        updateCharts(labels, principalData, emiData, {
+            initial: principalData,
+            returns: interestData,
+            withdrawals: emiData.map(v => -v)
+        });
+    }
+    
+    // SIP Calculator
+    function calculateSIP() {
+        const initialInvestment = parseFloat(document.getElementById('initialInvestment').value) || 0;
+        const monthlyInvestment = parseFloat(document.getElementById('monthlyInvestment').value) || 0;
+        const expectedReturn = parseFloat(document.getElementById('expectedReturn').value) || 0;
+        const timePeriod = parseFloat(document.getElementById('timePeriod').value) || 0;
+        
+        if (!validateInputs(initialInvestment, monthlyInvestment, expectedReturn, timePeriod)) {
+            resultsSection.classList.add('d-none');
+            return;
+        }
+        
+        const monthlyRate = expectedReturn / (12 * 100);
+        const totalMonths = timePeriod * 12;
+        
+        const labels = ['Start'];
+        const balanceData = [initialInvestment];
+        const investmentData = [initialInvestment];
+        const returnsData = [0];
+        
+        let balance = initialInvestment;
+        let totalInvestment = initialInvestment;
+        let totalReturns = 0;
+        
+        for (let year = 1; year <= timePeriod; year++) {
+            for (let month = 1; month <= 12; month++) {
+                balance = (balance + monthlyInvestment) * (1 + monthlyRate);
+                totalInvestment += monthlyInvestment;
+            }
+            
+            totalReturns = balance - totalInvestment;
+            
+            labels.push(`Year ${year}`);
+            balanceData.push(balance);
+            investmentData.push(totalInvestment);
+            returnsData.push(totalReturns);
+        }
+        
+        // Update results
+        document.getElementById('finalBalance').textContent = formatCurrency(balance);
+        document.getElementById('totalWithdrawals').textContent = formatCurrency(totalInvestment);
+        
+        // Update charts
+        updateCharts(labels, balanceData, investmentData, {
+            initial: investmentData,
+            returns: returnsData,
+            withdrawals: Array(labels.length).fill(0)
+        });
+    }
+    
+    function updateCharts(labels, balanceData, withdrawalData, compoundData) {
+        // Update balance chart
+        balanceChart.data.labels = labels;
+        balanceChart.data.datasets[0].data = balanceData;
+        balanceChart.update();
+        
+        // Update withdrawal chart
+        withdrawalChart.data.labels = labels;
+        withdrawalChart.data.datasets[0].data = withdrawalData;
+        withdrawalChart.update();
+        
+        // Update compound chart
+        compoundChart.data.labels = labels;
+        compoundChart.data.datasets[0].data = compoundData.initial;
+        compoundChart.data.datasets[1].data = compoundData.returns;
+        compoundChart.data.datasets[2].data = compoundData.withdrawals;
+        compoundChart.update();
+        
+        // Show results section
+        resultsSection.classList.remove('d-none');
+    }
     const form = document.getElementById('swpForm');
     const inputs = form.querySelectorAll('input');
     const resultsSection = document.getElementById('results');
